@@ -9,8 +9,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+
 import br.com.fpgaiad.vmovies.R;
 import br.com.fpgaiad.vmovies.entities.Constants;
+import br.com.fpgaiad.vmovies.entities.MovieResponse;
 import br.com.fpgaiad.vmovies.repository.MovieRepository;
 
 public class MainActivity extends AppCompatActivity implements ListAdapter.ClickListener {
@@ -30,15 +34,32 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, spanCount, GridLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(gridLayoutManager);
 
-        recyclerView.setAdapter(new ListAdapter(this, new MovieRepository().getMovieResponse().getResults(), this));
-
+        //recyclerView.setAdapter(new ListAdapter(this, new MovieRepository().getMovieResponse().getResults(), this));
         recyclerView.setHasFixedSize(true);
 
-//        Picasso.with(this)
-//                .load("https://api.themoviedb.org/3/discover/movie?api_key=YOUR_API_KEY=en-US&sort_by=popularity.desc")
-//                .into(MovieResponse.class)
+        mMovieQueryUrl = Constants.MOVIE_QUERY_BASE_URL + Constants.YOUR_API_KEY + "&language=en-US&sort_by=popularity.desc";
+
+        connect();
 
     }
+
+    private void connect() {
+        Ion.with(this)
+                .load(mMovieQueryUrl)
+                .as(MovieResponse.class)
+                .setCallback(new FutureCallback<MovieResponse>() {
+                    @Override
+                    public void onCompleted(Exception e, MovieResponse result) {
+                        setResponse(result);
+                    }
+                });
+
+    }
+
+    public void setResponse(MovieResponse result) {
+        recyclerView.setAdapter(new ListAdapter(this, result.getResults(), this ));
+    }
+
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
@@ -73,14 +94,16 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
         if (itemThatWasClickedId == R.id.action_popular) {
-            mMovieQueryUrl = "https://api.themoviedb.org/3/discover/movie?api_key=" + Constants.YOUR_API_KEY + "=en-US&sort_by=popularity.desc";
+            mMovieQueryUrl = Constants.MOVIE_QUERY_BASE_URL + Constants.YOUR_API_KEY + "&language=en-US&sort_by=popularity.desc";
+            connect();
             String textToShow = "sorting by most popular";
-            Toast.makeText(this, textToShow, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, textToShow, Toast.LENGTH_LONG).show();
             return true;
         } else if (itemThatWasClickedId == R.id.action_rated) {
-            mMovieQueryUrl = "https://api.themoviedb.org/3/discover/movie?api_key=" + Constants.YOUR_API_KEY + "sort_by=vote_average.desc";
+            mMovieQueryUrl = Constants.MOVIE_QUERY_BASE_URL + Constants.YOUR_API_KEY + "&language=en-US&sort_by=vote_average.desc";
+            connect();
             String textToShow = "sorting by highest rated";
-            Toast.makeText(this, textToShow, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, textToShow, Toast.LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
     }
