@@ -1,5 +1,6 @@
 package br.com.fpgaiad.vmovies.ui;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,7 +16,6 @@ import com.koushikdutta.ion.Ion;
 import br.com.fpgaiad.vmovies.R;
 import br.com.fpgaiad.vmovies.entities.Constants;
 import br.com.fpgaiad.vmovies.entities.MovieResponse;
-import br.com.fpgaiad.vmovies.repository.MovieRepository;
 
 public class MainActivity extends AppCompatActivity implements ListAdapter.ClickListener {
 
@@ -69,6 +69,10 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
         String toastMessage = "Item #" + clickedItemIndex + "clicked";
         mToast = Toast.makeText(this, toastMessage, Toast.LENGTH_LONG);
         mToast.show();
+
+        //Call DetailActivity.class
+        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+        startActivity(intent);
     }
 
 
@@ -92,18 +96,23 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         int itemThatWasClickedId = item.getItemId();
+
         if (itemThatWasClickedId == R.id.action_popular) {
-            mMovieQueryUrl = Constants.MOVIE_QUERY_BASE_URL + Constants.YOUR_API_KEY + "&language=en-US&sort_by=popularity.desc";
+            mMovieQueryUrl = Constants.MOVIE_QUERY_BASE_URL + Constants.YOUR_API_KEY + Constants.MOST_POPULAR_BASE_URL;
             connect();
             String textToShow = "sorting by most popular";
             Toast.makeText(this, textToShow, Toast.LENGTH_LONG).show();
             return true;
+
         } else if (itemThatWasClickedId == R.id.action_rated) {
-            mMovieQueryUrl = Constants.MOVIE_QUERY_BASE_URL + Constants.YOUR_API_KEY + "&language=en-US&sort_by=vote_average.desc";
+            mMovieQueryUrl = Constants.MOVIE_QUERY_BASE_URL + Constants.YOUR_API_KEY + Constants.HIGHEST_RATED_BASE_URL;
             connect();
             String textToShow = "sorting by highest rated";
             Toast.makeText(this, textToShow, Toast.LENGTH_LONG).show();
+        } else {
+
         }
         return super.onOptionsItemSelected(item);
     }
