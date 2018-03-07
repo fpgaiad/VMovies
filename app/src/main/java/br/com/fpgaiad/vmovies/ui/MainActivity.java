@@ -21,8 +21,8 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
 
     public int spanCount;
     RecyclerView recyclerView;
-    private Toast mToast;
-    private String mMovieQueryUrl;
+    private Toast mToast = null;
+    public static String mMovieQueryUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,15 +63,16 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
-        if (mToast != null) {
-            mToast.cancel();
-        }
-        String toastMessage = "Item #" + clickedItemIndex + "clicked";
-        mToast = Toast.makeText(this, toastMessage, Toast.LENGTH_LONG);
-        mToast.show();
+//        if (mToast != null) {
+//            mToast.cancel();
+//        }
+//        String toastMessage = "Item #" + clickedItemIndex + "clicked";
+//        mToast = Toast.makeText(this, toastMessage, Toast.LENGTH_LONG);
+//        mToast.show();
 
         //Call DetailActivity.class
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+        intent.putExtra(Intent.EXTRA_TEXT, "" + clickedItemIndex);
         startActivity(intent);
     }
 
@@ -96,25 +97,30 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        if (mToast != null) {
+            mToast.cancel();
+        }
         int itemThatWasClickedId = item.getItemId();
 
         if (itemThatWasClickedId == R.id.action_popular) {
             mMovieQueryUrl = Constants.MOVIE_QUERY_BASE_URL + Constants.YOUR_API_KEY + Constants.MOST_POPULAR_BASE_URL;
             connect();
-            String textToShow = "sorting by most popular";
-            Toast.makeText(this, textToShow, Toast.LENGTH_LONG).show();
+            String textToShow = "Most popular";
+
+            mToast = Toast.makeText(this, textToShow, Toast.LENGTH_LONG);
+            mToast.show();
             return true;
 
         } else if (itemThatWasClickedId == R.id.action_rated) {
             mMovieQueryUrl = Constants.MOVIE_QUERY_BASE_URL + Constants.YOUR_API_KEY + Constants.HIGHEST_RATED_BASE_URL;
             connect();
-            String textToShow = "sorting by highest rated";
-            Toast.makeText(this, textToShow, Toast.LENGTH_LONG).show();
+            String textToShow = "Highest rated";
+            mToast = Toast.makeText(this, textToShow, Toast.LENGTH_LONG);
+            mToast.show();
+            return true;
         } else {
-
+            return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 }
 

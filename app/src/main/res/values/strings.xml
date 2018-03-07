@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">VMovies</string>
-    <string name="most_popular">Most Popular</string>
-    <string name="highest_rated">Highest Rated</string>
+    <string name="most_popular">+ Popular</string>
+    <string name="highest_rated">+ Rated</string>
 </resources>
