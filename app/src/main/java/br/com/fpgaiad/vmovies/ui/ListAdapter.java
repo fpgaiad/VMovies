@@ -40,8 +40,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
     public ListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         Context context = parent.getContext();
+        View view = LayoutInflater.from(context)
+                .inflate(R.layout.list_item, parent, false);
 
-        View view = LayoutInflater.from(context).inflate(R.layout.list_item, parent, false);
         return new ListViewHolder(view);
     }
 
@@ -49,8 +50,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
     public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
 
         Movie movie = movieList.get(position);
-
         String imageUrl = movie.getPosterPath();
+
         Picasso.with(context)
                 .load(Constants.IMAGE_BASE_URL + imageUrl)
                 .placeholder(R.drawable.placeholder)
@@ -64,7 +65,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
     }
 
     class ListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
 
         private ImageView imgThumb;
 

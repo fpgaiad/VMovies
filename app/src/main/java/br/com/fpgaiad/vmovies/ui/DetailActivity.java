@@ -9,16 +9,13 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
 
 import br.com.fpgaiad.vmovies.R;
 import br.com.fpgaiad.vmovies.entities.Constants;
 import br.com.fpgaiad.vmovies.entities.Movie;
-import br.com.fpgaiad.vmovies.entities.MovieResponse;
 
 public class DetailActivity extends AppCompatActivity {
 
-    private int index;
     ImageView detailPoster;
     TextView detailTitle;
     TextView detailDate;
@@ -41,31 +38,14 @@ public class DetailActivity extends AppCompatActivity {
         detailVoteCount = findViewById(R.id.tv_detail_vote_count);
 
         Intent intent = getIntent();
-
         if (intent.hasExtra("movieExtra")) {
 
             Movie movie = (Movie) intent.getSerializableExtra("movieExtra");
             setDetails(movie);
-
-//            String indexStringPassed = intent.getStringExtra(Intent.EXTRA_TEXT);
-//            index = Integer.valueOf(indexStringPassed);
-
-//            Ion.with(this)
-//                    .load(MainActivity.mMovieQueryUrl)
-//                    .as(MovieResponse.class)
-//                    .setCallback(new FutureCallback<MovieResponse>() {
-//                        @Override
-//                        public void onCompleted(Exception e, MovieResponse result) {
-//                            setDetails(result);
-//                        }
-//                    });
-
         }
     }
 
     public void setDetails(Movie movieDetail) {
-//        List<Movie> detailMovies = result.getMovies();
-//        Movie movieDetail = detailMovies.get(index);
 
         String imageUrl = movieDetail.getPosterPath();
         Picasso.with(this)
