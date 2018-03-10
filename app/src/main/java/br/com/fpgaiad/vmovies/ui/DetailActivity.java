@@ -16,13 +16,13 @@ import br.com.fpgaiad.vmovies.entities.Movie;
 
 public class DetailActivity extends AppCompatActivity {
 
-    ImageView detailPoster;
-    TextView detailTitle;
-    TextView detailDate;
-    RatingBar detailRatingBarVotes;
-    TextView detailVotes;
-    TextView detailSynopsis;
-    TextView detailVoteCount;
+    private ImageView detailPoster;
+    private TextView detailTitle;
+    private TextView detailDate;
+    private RatingBar detailRatingBarVotes;
+    private TextView detailVotes;
+    private TextView detailSynopsis;
+    private TextView detailVoteCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    public void setDetails(Movie movieDetail) {
+    private void setDetails(Movie movieDetail) {
 
         String imageUrl = movieDetail.getPosterPath();
         Picasso.with(this)

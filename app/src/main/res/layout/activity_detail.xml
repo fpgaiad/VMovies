@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#888">
+    android:background="#888"
+    tools:ignore="Overdraw">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -21,6 +22,7 @@
                 android:id="@+id/iv_detail_poster"
                 android:layout_width="150dp"
                 android:layout_height="220dp"
+                android:contentDescription="@string/detailed_movie_thumb"
                 android:scaleType="centerCrop"
                 tools:src="@drawable/placeholder" />
 
@@ -29,7 +31,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:orientation="vertical"
-                android:paddingLeft="16dp">
+                android:paddingLeft="16dp"
+                android:paddingStart="16dp"
+                tools:ignore="RtlSymmetry">
 
                 <TextView
                     android:id="@+id/tv_detail_title"
@@ -66,9 +70,9 @@
                         android:id="@+id/tv_detail_votes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="#343434"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#343434"
                         tools:text="4.5 /" />
 
                     <TextView

@@ -20,15 +20,15 @@ import br.com.fpgaiad.vmovies.entities.MovieResponse;
 
 public class MainActivity extends AppCompatActivity implements ListAdapter.ClickListener {
 
-    public int spanCount;
+    private int spanCount;
     private MovieResponse movieResponse;
     private Toast mToast = null;
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
 
-    public static final String MOST_POPULAR_URL =
+    private static final String MOST_POPULAR_URL =
             Constants.BASE_URL_WITH_API_KEY + Constants.MOST_POPULAR_URL;
 
-    public static final String HIGHEST_RATED_URL =
+    private static final String HIGHEST_RATED_URL =
             Constants.BASE_URL_WITH_API_KEY + Constants.HIGHEST_RATED_URL;
 
     @Override
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
 
     }
 
-    public void setResponse(MovieResponse result) {
+    private void setResponse(MovieResponse result) {
         movieResponse = result;
         recyclerView.setAdapter(new ListAdapter(this, result.getMovies(), this));
     }
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
         }
     }
 
-    public void setSpanCount() {
+    private void setSpanCount() {
 
         spanCount = getResources().getConfiguration().orientation ==
                 Configuration.ORIENTATION_LANDSCAPE ? 3 : 2;

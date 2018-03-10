@@ -19,8 +19,8 @@ import br.com.fpgaiad.vmovies.entities.Movie;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> {
 
-    private Context context;
-    private List<Movie> movieList;
+    private final Context context;
+    private final List<Movie> movieList;
     private final ClickListener mOnclickListener;
 
     public ListAdapter(Context context, List<Movie> movieList, ClickListener listener) {
@@ -66,7 +66,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
 
     class ListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private ImageView imgThumb;
+        private final ImageView imgThumb;
 
         public ListViewHolder(View itemView) {
             super(itemView);
