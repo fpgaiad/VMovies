@@ -1,11 +1,11 @@
 package br.com.fpgaiad.vmovies.ui;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -15,14 +15,18 @@ import com.koushikdutta.ion.Ion;
 
 import br.com.fpgaiad.vmovies.R;
 import br.com.fpgaiad.vmovies.entities.Constants;
+import br.com.fpgaiad.vmovies.entities.Movie;
 import br.com.fpgaiad.vmovies.entities.MovieResponse;
 
 public class MainActivity extends AppCompatActivity implements ListAdapter.ClickListener {
 
     public int spanCount;
-    RecyclerView recyclerView;
+    private MovieResponse movieResponse;
     private Toast mToast = null;
-    public static String mMovieQueryUrl;
+    RecyclerView recyclerView;
+    //public static String mMovieQueryUrl;
+    public static final String MOST_POPULAR_URL = Constants.BASE_URL_WITH_API_KEY + Constants.MOST_POPULAR_URL;
+    public static final String HIGHEST_RATED_URL = Constants.BASE_URL_WITH_API_KEY + Constants.HIGHEST_RATED_URL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,18 +38,17 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, spanCount, GridLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(gridLayoutManager);
 
-        //recyclerView.setAdapter(new ListAdapter(this, new MovieRepository().getMovieResponse().getResults(), this));
+        //recyclerView.setAdapter(new ListAdapter(this, new MovieRepository().getMovieResponse().getMovies(), this));
         recyclerView.setHasFixedSize(true);
 
-        mMovieQueryUrl = Constants.MOVIE_QUERY_BASE_URL + Constants.YOUR_API_KEY + "&language=en-US&sort_by=popularity.desc";
+        //mMovieQueryUrl = Constants.QUERY_BASE_URL + Constants.YOUR_API_KEY + "&language=en-US&sort_by=popularity.desc";
 
-        connect();
-
+        loadMovies(MOST_POPULAR_URL);
     }
 
-    private void connect() {
+    private void loadMovies(String url) {
         Ion.with(this)
-                .load(mMovieQueryUrl)
+                .load(url)
                 .as(MovieResponse.class)
                 .setCallback(new FutureCallback<MovieResponse>() {
                     @Override
@@ -56,8 +59,10 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
 
     }
 
+
     public void setResponse(MovieResponse result) {
-        recyclerView.setAdapter(new ListAdapter(this, result.getResults(), this ));
+        movieResponse = result;
+        recyclerView.setAdapter(new ListAdapter(this, result.getMovies(), this ));
     }
 
 
@@ -70,24 +75,46 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
 //        mToast = Toast.makeText(this, toastMessage, Toast.LENGTH_LONG);
 //        mToast.show();
 
-        //Call DetailActivity.class
-        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-        intent.putExtra(Intent.EXTRA_TEXT, "" + clickedItemIndex);
-        startActivity(intent);
-    }
+        if (movieResponse != null) {
+            Movie movie = movieResponse.getMovies().get(clickedItemIndex);
+            Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+            //intent.putExtra(Intent.EXTRA_TEXT, String.valueOf(clickedItemIndex));
+            intent.putExtra("movieExtra", movie);
+            startActivity(intent);
+        }
 
+
+
+        //Call DetailActivity.class
+//        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+//        intent.putExtra(Intent.EXTRA_TEXT, String.valueOf(clickedItemIndex));
+//        startActivity(intent);
+    }
 
     public void setSpanCount() {
-        Display screenOrientation = getWindowManager().getDefaultDisplay();
-        if (screenOrientation.getWidth() == screenOrientation.getHeight()) {
-            spanCount = 3;
-        } else if (screenOrientation.getWidth() < screenOrientation.getHeight()) {
-            spanCount = 2;
-        } else {
-            spanCount = 3;
-        }
-    }
+//        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//            spanCount = 3;
+//        } else {
+//            spanCount = 2;
+//        }
 
+
+        spanCount = getResources().getConfiguration().orientation ==
+                Configuration.ORIENTATION_LANDSCAPE ? 3 : 2;
+
+
+
+//        spanCount = 3;
+//
+//        Display screenOrientation = getWindowManager().getDefaultDisplay();
+//        if (screenOrientation.getWidth() == screenOrientation.getHeight()) {
+//            spanCount = 3;
+//        } else if (screenOrientation.getWidth() < screenOrientation.getHeight()) {
+//            spanCount = 2;
+//        } else {
+//            spanCount = 3;
+//        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -102,25 +129,43 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
         }
         int itemThatWasClickedId = item.getItemId();
 
-        if (itemThatWasClickedId == R.id.action_popular) {
-            mMovieQueryUrl = Constants.MOVIE_QUERY_BASE_URL + Constants.YOUR_API_KEY + Constants.MOST_POPULAR_BASE_URL;
-            connect();
-            String textToShow = "Most popular";
 
-            mToast = Toast.makeText(this, textToShow, Toast.LENGTH_LONG);
-            mToast.show();
+//
+//        boolean isPopularVideos = itemThatWasClickedId == R.id.action_popular;
+//        loadMovies(isPopularVideos ? MOST_POPULAR_URL : HIGHEST_RATED_URL);
+//        showMessage(isPopularVideos ? "Most popular" : "Highest rated");
+//
+
+
+
+        if (itemThatWasClickedId == R.id.action_popular) {
+            //mMovieQueryUrl = Constants.QUERY_BASE_URL + Constants.YOUR_API_KEY + Constants.MOST_POPULAR_URL;
+            loadMovies(MOST_POPULAR_URL);
+            //String textToShow = "Most popular";
+
+            showMessage("Most popular");
             return true;
 
         } else if (itemThatWasClickedId == R.id.action_rated) {
-            mMovieQueryUrl = Constants.MOVIE_QUERY_BASE_URL + Constants.YOUR_API_KEY + Constants.HIGHEST_RATED_BASE_URL;
-            connect();
-            String textToShow = "Highest rated";
-            mToast = Toast.makeText(this, textToShow, Toast.LENGTH_LONG);
-            mToast.show();
+            //mMovieQueryUrl = Constants.QUERY_BASE_URL + Constants.YOUR_API_KEY + Constants.HIGHEST_RATED_URL;
+            loadMovies(HIGHEST_RATED_URL);
+            //String textToShow = "Highest rated";
+            showMessage("Highest rated");
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
     }
+
+    private void showMessage(String textToShow) {
+        mToast = Toast.makeText(this, textToShow, Toast.LENGTH_LONG);
+        mToast.show();
+    }
+
+    //    @Override
+//    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+//        super.onSaveInstanceState(outState, outPersistentState);
+//    }
+
 }
 
