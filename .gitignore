@@ -6,7 +6,7 @@
 .DS_Store
 /build
 /captures
+/gradle.properties
 .externalNativeBuild
 ApiKey.java
 MovieRepository.java
-/gradle.properties
