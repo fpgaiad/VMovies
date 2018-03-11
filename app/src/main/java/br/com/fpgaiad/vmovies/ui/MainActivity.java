@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -26,10 +27,12 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
     private RecyclerView recyclerView;
 
     private static final String MOST_POPULAR_URL =
-            Constants.BASE_URL_WITH_API_KEY + Constants.MOST_POPULAR_URL;
+            Constants.QUERY_BASE_URL + Constants.MOST_POPULAR_STRING + Constants.API_KEY_WITH_SUFIX_BASE_URL;
 
     private static final String HIGHEST_RATED_URL =
-            Constants.BASE_URL_WITH_API_KEY + Constants.HIGHEST_RATED_URL;
+            Constants.QUERY_BASE_URL + Constants.HIGHEST_RATED_STRING + Constants.API_KEY_WITH_SUFIX_BASE_URL;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
 
         recyclerView.setHasFixedSize(true);
 
+        Log.d("MainActivity", MOST_POPULAR_URL);
         loadMovies(MOST_POPULAR_URL);
     }
 

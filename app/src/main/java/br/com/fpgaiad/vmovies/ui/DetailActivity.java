@@ -47,9 +47,9 @@ public class DetailActivity extends AppCompatActivity {
 
     private void setDetails(Movie movieDetail) {
 
-        String imageUrl = movieDetail.getPosterPath();
+        String imageUrl = Constants.IMAGE_BASE_URL + movieDetail.getPosterPath();
         Picasso.with(this)
-                .load(Constants.IMAGE_BASE_URL + imageUrl)
+                .load(imageUrl)
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.error)
                 .into(detailPoster);

@@ -50,10 +50,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
     public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
 
         Movie movie = movieList.get(position);
-        String imageUrl = movie.getPosterPath();
 
+        String imageUrl = Constants.IMAGE_BASE_URL + movie.getPosterPath();
         Picasso.with(context)
-                .load(Constants.IMAGE_BASE_URL + imageUrl)
+                .load(imageUrl)
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.error)
                 .into(holder.imgThumb);
