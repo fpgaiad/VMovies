@@ -10,7 +10,7 @@ public class Constants {
 
     private static final String QUERY_BASE_URL =
             "https://api.themoviedb.org/3/discover/movie?api_key=";
-    static final String YOUR_API_KEY = BuildConfig.API_KEY;
+    private static final String YOUR_API_KEY = BuildConfig.API_KEY;
 
 
     //Create your own YOUR_API_KEY at: https://www.themoviedb.org/settings/api
