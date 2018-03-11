@@ -9,3 +9,4 @@
 .externalNativeBuild
 ApiKey.java
 MovieRepository.java
+/gradle.properties
