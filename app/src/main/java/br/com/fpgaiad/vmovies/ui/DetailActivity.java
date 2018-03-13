@@ -40,8 +40,9 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        ButterKnife.bind(this);
 
+        //Using 'Butter Knife' framework
+        ButterKnife.bind(this);
 //Code used without 'Butter Knife':
 //
 //        detailPoster = findViewById(R.id.iv_detail_poster);
@@ -73,7 +74,6 @@ public class DetailActivity extends AppCompatActivity {
         float voteAverage = movieDetail.getVoteAverage() / 2;
         String stringVoteAverage = voteAverage + "  ";
         String stringVoteCount = movieDetail.getVoteCount() + " votes";
-
 
         detailTitle.setText(movieDetail.getOriginalTitle());
         detailDate.setText(movieDetail.getReleaseDate());

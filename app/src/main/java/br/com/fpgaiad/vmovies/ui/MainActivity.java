@@ -32,8 +32,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
     private static final String HIGHEST_RATED_URL =
             Constants.QUERY_BASE_URL + Constants.HIGHEST_RATED_STRING + Constants.API_KEY_WITH_SUFIX_BASE_URL;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
         loadMovies(isPopularVideos ? MOST_POPULAR_URL : HIGHEST_RATED_URL);
         showMessage(isPopularVideos ? "Most popular" : "Highest rated");
         return true;
-
 
         //Alternative Code:
 //
