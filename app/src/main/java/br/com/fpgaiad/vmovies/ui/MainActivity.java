@@ -2,6 +2,7 @@ package br.com.fpgaiad.vmovies.ui;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,12 +26,13 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
     private MovieResponse movieResponse;
     private Toast mToast = null;
     private RecyclerView recyclerView;
+    private String movieToLoad;
 
-    private static final String MOST_POPULAR_URL =
-            Constants.QUERY_BASE_URL + Constants.MOST_POPULAR_STRING + Constants.API_KEY_WITH_SUFIX_BASE_URL;
+    private static final String MOST_POPULAR_URL = Constants.QUERY_BASE_URL +
+            Constants.MOST_POPULAR_STRING + Constants.API_KEY_WITH_SUFIX_BASE_URL;
 
-    private static final String HIGHEST_RATED_URL =
-            Constants.QUERY_BASE_URL + Constants.HIGHEST_RATED_STRING + Constants.API_KEY_WITH_SUFIX_BASE_URL;
+    private static final String HIGHEST_RATED_URL = Constants.QUERY_BASE_URL +
+            Constants.HIGHEST_RATED_STRING + Constants.API_KEY_WITH_SUFIX_BASE_URL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +46,14 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
 
         recyclerView.setHasFixedSize(true);
 
-        Log.d("MainActivity", MOST_POPULAR_URL);
-        loadMovies(MOST_POPULAR_URL);
+        if (savedInstanceState != null) {
+            movieToLoad = savedInstanceState.getString("current_movie");
+            loadMovies(movieToLoad);
+        } else {
+            movieToLoad = MOST_POPULAR_URL;
+            Log.d("MainActivity", movieToLoad);
+            loadMovies(movieToLoad);
+        }
     }
 
     private void loadMovies(String url) {
@@ -102,7 +110,8 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
         int itemThatWasClickedId = item.getItemId();
 
         boolean isPopularVideos = itemThatWasClickedId == R.id.action_popular;
-        loadMovies(isPopularVideos ? MOST_POPULAR_URL : HIGHEST_RATED_URL);
+        movieToLoad = isPopularVideos ? MOST_POPULAR_URL : HIGHEST_RATED_URL;
+        loadMovies(movieToLoad);
         showMessage(isPopularVideos ? "Most popular" : "Highest rated");
         return true;
 
@@ -126,6 +135,12 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
     private void showMessage(String textToShow) {
         mToast = Toast.makeText(this, textToShow, Toast.LENGTH_LONG);
         mToast.show();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("current_movie", movieToLoad);
     }
 }
 
