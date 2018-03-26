@@ -20,7 +20,7 @@ import br.com.fpgaiad.vmovies.entities.Constants;
 import br.com.fpgaiad.vmovies.entities.Movie;
 import br.com.fpgaiad.vmovies.entities.MovieResponse;
 
-public class MainActivity extends AppCompatActivity implements ListAdapter.ClickListener {
+public class MainActivity extends AppCompatActivity implements ListAdapter.ClickListener, VMovieView {
 
     private int spanCount;
     private MovieResponse movieResponse;

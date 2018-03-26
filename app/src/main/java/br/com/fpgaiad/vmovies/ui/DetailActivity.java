@@ -15,7 +15,7 @@ import br.com.fpgaiad.vmovies.entities.Movie;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements DetailView {
 
     //Using 'Butter Knife' framework
     @BindView(R.id.iv_detail_poster) ImageView detailPoster;
