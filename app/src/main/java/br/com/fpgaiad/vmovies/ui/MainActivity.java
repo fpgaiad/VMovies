@@ -2,79 +2,84 @@ package br.com.fpgaiad.vmovies.ui;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.koushikdutta.async.future.FutureCallback;
+
 import com.koushikdutta.ion.Ion;
 
 import br.com.fpgaiad.vmovies.R;
 import br.com.fpgaiad.vmovies.entities.Constants;
 import br.com.fpgaiad.vmovies.entities.Movie;
 import br.com.fpgaiad.vmovies.entities.MovieResponse;
+import br.com.fpgaiad.vmovies.presentation.VMoviePresenter;
+import br.com.fpgaiad.vmovies.presentation.VMoviePresenterImpl;
+import br.com.fpgaiad.vmovies.repository.VMovieRepositoryImpl;
+import br.com.fpgaiad.vmovies.repository.VMovieRespository;
 
-public class MainActivity extends AppCompatActivity implements ListAdapter.ClickListener, VMovieView {
+public class MainActivity extends AppCompatActivity implements ListAdapter.ClickListener,
+        VMovieView {
 
-    private int spanCount;
     private MovieResponse movieResponse;
     private Toast mToast = null;
     private RecyclerView recyclerView;
     private String movieToLoad;
-
-    private static final String MOST_POPULAR_URL = Constants.QUERY_BASE_URL +
-            Constants.MOST_POPULAR_STRING + Constants.API_KEY_WITH_SUFIX_BASE_URL;
-
-    private static final String HIGHEST_RATED_URL = Constants.QUERY_BASE_URL +
-            Constants.HIGHEST_RATED_STRING + Constants.API_KEY_WITH_SUFIX_BASE_URL;
+    private VMoviePresenter presenter;
+    private boolean isPopularVideos;
+    private int spanCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setSpanCount();
+
+        Ion ion = (Ion) Ion.with(this);
+        VMovieRespository respository = new VMovieRepositoryImpl(ion);
+
+        presenter = new VMoviePresenterImpl(this, respository);
         recyclerView = findViewById(R.id.recycler_view);
+
+        setSpanCount();
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, spanCount);
         recyclerView.setLayoutManager(gridLayoutManager);
-
         recyclerView.setHasFixedSize(true);
 
         if (savedInstanceState != null) {
             movieToLoad = savedInstanceState.getString("current_movie");
-            loadMovies(movieToLoad);
         } else {
-            movieToLoad = MOST_POPULAR_URL;
-            Log.d("MainActivity", movieToLoad);
-            loadMovies(movieToLoad);
+            movieToLoad = Constants.MOST_POPULAR_URL;
         }
+
+        isPopularVideos = presenter.checkIsPopularVideos(movieToLoad);
+        presenter.setIsPopularVideoOnPresenter(isPopularVideos);
+        presenter.loadMovies(movieToLoad);
     }
+//    private void loadMovies(String url) {
+//        Ion.with(this)
+//                .load(url)
+//                .as(MovieResponse.class)
+//                .setCallback(new FutureCallback<MovieResponse>() {
+//                    @Override
+//                    public void onCompleted(Exception e, MovieResponse result) {
+//                        if (e == null) {
+//                            setResponse(result);
+//                        } else {
+//                            Toast.makeText(MainActivity.this,
+//                                    "No internet connection", Toast.LENGTH_LONG).show();
+//                        }
+//                    }
+//                });
+//
+//    }
 
-    private void loadMovies(String url) {
-        Ion.with(this)
-                .load(url)
-                .as(MovieResponse.class)
-                .setCallback(new FutureCallback<MovieResponse>() {
-                    @Override
-                    public void onCompleted(Exception e, MovieResponse result) {
-                        if (e == null) {
-                            setResponse(result);
-                        } else {
-                            Toast.makeText(MainActivity.this,
-                                    "No internet connection", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-
-    }
-
-    private void setResponse(MovieResponse result) {
+    @Override
+    public void setResponse(MovieResponse result) {
         movieResponse = result;
         recyclerView.setAdapter(new ListAdapter(this, result.getMovies(), this));
     }
@@ -90,8 +95,8 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
         }
     }
 
-    private void setSpanCount() {
-
+    @Override
+    public void setSpanCount() {
         spanCount = getResources().getConfiguration().orientation ==
                 Configuration.ORIENTATION_LANDSCAPE ? 3 : 2;
     }
@@ -104,17 +109,15 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mToast != null) {
-            mToast.cancel();
-        }
+
         int itemThatWasClickedId = item.getItemId();
+        isPopularVideos = itemThatWasClickedId == R.id.action_popular;
 
-        boolean isPopularVideos = itemThatWasClickedId == R.id.action_popular;
-        movieToLoad = isPopularVideos ? MOST_POPULAR_URL : HIGHEST_RATED_URL;
-        loadMovies(movieToLoad);
-        showMessage(isPopularVideos ? "Most popular" : "Highest rated");
+        presenter.setIsPopularVideoOnPresenter(isPopularVideos);
+
+        movieToLoad = presenter.chooseMovies();
+        presenter.loadMovies(movieToLoad);
         return true;
-
         //Alternative Code:
 //
 //        if (itemThatWasClickedId == R.id.action_popular) {
@@ -129,10 +132,13 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
 //        } else {
 //            return super.onOptionsItemSelected(item);
 //        }
-
     }
 
-    private void showMessage(String textToShow) {
+    @Override
+    public void showMessage(String textToShow) {
+        if (mToast != null) {
+            mToast.cancel();
+        }
         mToast = Toast.makeText(this, textToShow, Toast.LENGTH_LONG);
         mToast.show();
     }
