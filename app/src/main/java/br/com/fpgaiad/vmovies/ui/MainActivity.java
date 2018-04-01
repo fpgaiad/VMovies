@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.koushikdutta.async.future.FutureCallback;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
     private Toast mToast = null;
     private RecyclerView recyclerView;
     private String movieToLoad;
+    private ProgressBar mLoadingIndicator;
 
     private static final String MOST_POPULAR_URL = Constants.QUERY_BASE_URL +
             Constants.MOST_POPULAR_STRING + Constants.API_KEY_WITH_SUFIX_BASE_URL;
@@ -38,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
         setSpanCount();
         recyclerView = findViewById(R.id.recycler_view);
@@ -57,12 +62,15 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
     }
 
     private void loadMovies(String url) {
+        mLoadingIndicator.setVisibility(View.VISIBLE);
+
         Ion.with(this)
                 .load(url)
                 .as(MovieResponse.class)
                 .setCallback(new FutureCallback<MovieResponse>() {
                     @Override
                     public void onCompleted(Exception e, MovieResponse result) {
+                        mLoadingIndicator.setVisibility(View.INVISIBLE);
                         if (e == null) {
                             setResponse(result);
                         } else {
