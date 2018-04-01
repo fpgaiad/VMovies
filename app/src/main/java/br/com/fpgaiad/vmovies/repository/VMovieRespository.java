@@ -1,6 +1,9 @@
 package br.com.fpgaiad.vmovies.repository;
 
-import br.com.fpgaiad.vmovies.presentation.VMoviePresenter;
+import javax.security.auth.callback.Callback;
+
+import br.com.fpgaiad.vmovies.entities.MovieResponse;
+import retrofit2.Call;
 
 /**
  * Created by felipegaiad on 27/03/18.
@@ -8,6 +11,6 @@ import br.com.fpgaiad.vmovies.presentation.VMoviePresenter;
 
 public interface VMovieRespository {
 
-    void getRequestedMovies(String url);
+    Call<MovieResponse> getRequestedMovies(Callback callback, String url);
 
 }
