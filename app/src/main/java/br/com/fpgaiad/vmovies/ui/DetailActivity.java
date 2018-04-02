@@ -63,9 +63,9 @@ public class DetailActivity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        if (intent.hasExtra("movieExtra")) {
+        if (intent.hasExtra(getString(R.string.movie_extra))) {
 
-            Movie movie = intent.getParcelableExtra("movieExtra");
+            Movie movie = intent.getParcelableExtra(getString(R.string.movie_extra));
             setDetails(movie);
         }
     }
@@ -90,7 +90,7 @@ public class DetailActivity extends AppCompatActivity {
 
         float voteAverage = movieDetail.getVoteAverage() / 2;
         String stringVoteAverage = voteAverage + "  ";
-        String stringVoteCount = movieDetail.getVoteCount() + " votes";
+        String stringVoteCount = "/ " + movieDetail.getVoteCount() + " votes";
 
         detailTitle.setText(movieDetail.getOriginalTitle());
         detailDate.setText(movieDetail.getReleaseDate());

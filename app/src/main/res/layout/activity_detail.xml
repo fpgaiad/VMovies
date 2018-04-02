@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#888"
+    android:background="@color/background"
     tools:ignore="Overdraw">
 
     <LinearLayout
@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:textColor="#000"
+                    android:textColor="@color/detail_title_text"
                     android:textSize="18sp"
                     tools:text="Título do Filme" />
 
@@ -49,7 +49,7 @@
                     android:id="@+id/tv_detail_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#343434"
+                    android:textColor="@color/detail_body_text"
                     android:textSize="16sp"
                     tools:text="10/03/2017" />
 
@@ -70,7 +70,7 @@
                         android:id="@+id/tv_detail_votes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#343434"
+                        android:textColor="@color/detail_body_text"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         tools:text="4.5 /" />
@@ -79,7 +79,7 @@
                         android:id="@+id/tv_detail_vote_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#343434"
+                        android:textColor="@color/detail_body_text"
                         tools:text="123 votes" />
 
                 </LinearLayout>
@@ -93,7 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingTop="16dp"
-            android:textColor="#343434"
+            android:textColor="@color/detail_body_text"
             android:textSize="16sp"
             tools:text="Este é um exemplo da sinopse do filme." />
 

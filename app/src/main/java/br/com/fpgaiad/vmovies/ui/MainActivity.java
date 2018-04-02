@@ -59,8 +59,8 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
 //        } else {
 //            movieToLoad = MOST_POPULAR_URL;
 //        }
-        movieToLoad = savedInstanceState != null ?
-                savedInstanceState.getString("current_movie") : MOST_POPULAR_URL;
+        movieToLoad = (savedInstanceState != null) ?
+                savedInstanceState.getString(getString(R.string.current_movie_key)) : MOST_POPULAR_URL;
         isPopularVideos = movieToLoad != null && movieToLoad.equals(MOST_POPULAR_URL);
 
         loadMovies(movieToLoad);
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
                             setResponse(result);
                         } else {
                             Toast.makeText(MainActivity.this,
-                                    "No internet connection", Toast.LENGTH_LONG).show();
+                                    "No response", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
         if (movieResponse != null) {
             Movie movie = movieResponse.getMovies().get(clickedItemIndex);
             Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-            intent.putExtra("movieExtra", movie);
+            intent.putExtra(getString(R.string.movie_extra), movie);
             startActivity(intent);
         }
     }
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
     private void setSpanCount() {
 
         spanCount = getResources().getConfiguration().orientation ==
-                Configuration.ORIENTATION_LANDSCAPE ? 3 : 2;
+                Configuration.ORIENTATION_LANDSCAPE ? 4 : 2;
     }
 
     @Override
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("current_movie", movieToLoad);
+        outState.putString(getString(R.string.current_movie_key), movieToLoad);
     }
 }
 

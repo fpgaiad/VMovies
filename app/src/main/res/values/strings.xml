@@ -5,4 +5,6 @@
     <string name="detailed_movie_thumb">Image of detailed movie</string>
     <string name="movie_image">Movie image</string>
     <string name="action_detail">Detail</string>
+    <string name="current_movie_key">current_movie</string>
+    <string name="movie_extra">movieExtra</string>
 </resources>
