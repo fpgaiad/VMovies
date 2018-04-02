@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">VMovies</string>
-    <string name="most_popular">+ Popular</string>
-    <string name="highest_rated">+ Rated</string>
+    <string name="most_popular">Most Popular</string>
+    <string name="highest_rated">Highest Rated</string>
     <string name="detailed_movie_thumb">Image of detailed movie</string>
     <string name="movie_image">Movie image</string>
     <string name="action_detail">Detail</string>
