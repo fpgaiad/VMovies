@@ -28,7 +28,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:gravity="start"
                 android:orientation="vertical"
                 android:paddingLeft="16dp"
@@ -62,7 +62,7 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
 
@@ -84,18 +84,53 @@
 
                 </LinearLayout>
 
+                <Button
+                    android:id="@+id/btn_trailer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/colorAccent"
+                    android:onClick="loadTrailer"
+                    android:paddingHorizontal="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:text="@string/btn_trailer"
+                    android:textSize="12sp" />
+
             </LinearLayout>
 
         </LinearLayout>
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="@string/synopsis_title_section"
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/tv_detail_synopsis"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingTop="16dp"
+            android:layout_marginTop="8dp"
             android:textColor="@color/detail_body_text"
             android:textSize="16sp"
-            tools:text="Este é um exemplo da sinopse do filme." />
+            tools:text="This is a Synopsis text example." />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="@string/review_title_section"
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_reviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
 
     </LinearLayout>
 

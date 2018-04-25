@@ -7,4 +7,9 @@
     <string name="action_detail">Detail</string>
     <string name="current_movie_key">current_movie</string>
     <string name="movie_extra">movieExtra</string>
+    <string name="btn_trailer">Watch Trailer</string>
+    <string name="trailer_not_available">this trailer isn\'t available</string>
+    <string name="try_again_later">sorry, try again later</string>
+    <string name="review_title_section">Reviews</string>
+    <string name="synopsis_title_section">Synopsis</string>
 </resources>

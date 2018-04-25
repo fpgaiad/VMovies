@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/review_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_detail_author_review"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/detail_body_text"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        tools:text="Author name goes here" />
+
+    <TextView
+        android:id="@+id/tv_detail_content_review"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/detail_body_text"
+        android:textSize="16sp"
+        tools:text="Content goes here" />
+
+
+</LinearLayout>

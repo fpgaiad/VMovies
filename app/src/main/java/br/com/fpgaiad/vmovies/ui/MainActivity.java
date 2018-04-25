@@ -2,13 +2,11 @@ package br.com.fpgaiad.vmovies.ui;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.PersistableBundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,12 +32,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
     private ActionBar mActionBar;
     private boolean isPopularVideos;
 
-    private static final String MOST_POPULAR_URL = Constants.QUERY_BASE_URL +
-            Constants.MOST_POPULAR_STRING + Constants.API_KEY_WITH_SUFIX_BASE_URL;
-
-    private static final String HIGHEST_RATED_URL = Constants.QUERY_BASE_URL +
-            Constants.HIGHEST_RATED_STRING + Constants.API_KEY_WITH_SUFIX_BASE_URL;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +41,8 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
         setSpanCount();
-        recyclerView = findViewById(R.id.recycler_view);
+
+        recyclerView = findViewById(R.id.recycler_view_thumbs);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, spanCount);
         recyclerView.setLayoutManager(gridLayoutManager);
 
@@ -60,8 +53,8 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
 //            movieToLoad = MOST_POPULAR_URL;
 //        }
         movieToLoad = (savedInstanceState != null) ?
-                savedInstanceState.getString(getString(R.string.current_movie_key)) : MOST_POPULAR_URL;
-        isPopularVideos = movieToLoad != null && movieToLoad.equals(MOST_POPULAR_URL);
+                savedInstanceState.getString(getString(R.string.current_movie_key)) : Constants.MOST_POPULAR_URL;
+        isPopularVideos = movieToLoad != null && movieToLoad.equals(Constants.MOST_POPULAR_URL);
 
         loadMovies(movieToLoad);
     }
@@ -124,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
         int itemThatWasClickedId = item.getItemId();
 
         isPopularVideos = itemThatWasClickedId == R.id.action_popular;
-        movieToLoad = isPopularVideos ? MOST_POPULAR_URL : HIGHEST_RATED_URL;
+        movieToLoad = isPopularVideos ? Constants.MOST_POPULAR_URL : Constants.HIGHEST_RATED_URL;
         loadMovies(movieToLoad);
         showMessage(isPopularVideos ? getString(R.string.most_popular) : getString(R.string.highest_rated));
         return true;

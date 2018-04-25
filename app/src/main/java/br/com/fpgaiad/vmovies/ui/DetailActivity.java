@@ -1,33 +1,58 @@
 package br.com.fpgaiad.vmovies.ui;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import br.com.fpgaiad.vmovies.R;
 import br.com.fpgaiad.vmovies.entities.Constants;
 import br.com.fpgaiad.vmovies.entities.Movie;
+import br.com.fpgaiad.vmovies.entities.ReviewResponse;
+import br.com.fpgaiad.vmovies.entities.Trailer;
+import br.com.fpgaiad.vmovies.entities.TrailerResponse;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DetailActivity extends AppCompatActivity {
 
     //Using 'Butter Knife' framework
-    @BindView(R.id.iv_detail_poster) ImageView detailPoster;
-    @BindView(R.id.tv_detail_title) TextView detailTitle;
-    @BindView(R.id.tv_detail_date) TextView detailDate;
-    @BindView(R.id.rb_detail_votes) RatingBar detailRatingBarVotes;
-    @BindView(R.id.tv_detail_votes) TextView detailVotes;
-    @BindView(R.id.tv_detail_vote_count) TextView detailVoteCount;
-    @BindView(R.id.tv_detail_synopsis) TextView detailSynopsis;
+    @BindView(R.id.iv_detail_poster)
+    ImageView detailPoster;
+    @BindView(R.id.tv_detail_title)
+    TextView detailTitle;
+    @BindView(R.id.tv_detail_date)
+    TextView detailDate;
+    @BindView(R.id.rb_detail_votes)
+    RatingBar detailRatingBarVotes;
+    @BindView(R.id.tv_detail_votes)
+    TextView detailVotes;
+    @BindView(R.id.tv_detail_vote_count)
+    TextView detailVoteCount;
+    @BindView(R.id.tv_detail_synopsis)
+    TextView detailSynopsis;
+    @BindView(R.id.recycler_view_reviews)
+    RecyclerView recyclerViewReviews;
+
+    private Movie movie;
+    //private String movieId;
 
 //Code used without 'Butter Knife':
 //
@@ -60,14 +85,41 @@ public class DetailActivity extends AppCompatActivity {
 //        detailVotes = findViewById(R.id.tv_detail_votes);
 //        detailSynopsis = findViewById(R.id.tv_detail_synopsis);
 //        detailVoteCount = findViewById(R.id.tv_detail_vote_count);
-
+        recyclerViewReviews = findViewById(R.id.recycler_view_reviews);
+        recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL, false));
 
         Intent intent = getIntent();
         if (intent.hasExtra(getString(R.string.movie_extra))) {
 
-            Movie movie = intent.getParcelableExtra(getString(R.string.movie_extra));
+            movie = intent.getParcelableExtra(getString(R.string.movie_extra));
             setDetails(movie);
+            setReviews(movie);
         }
+    }
+
+    public void setReviews(Movie movie) {
+
+
+        String movieId = String.valueOf(movie.getId());
+
+        String REVIEW_URL = Constants.QUERY_BASE_URL + movieId + Constants.REVIEWS_STRING +
+                Constants.API_KEY_WITH_SUFIX_BASE_URL;
+
+        Ion.with(this)
+                .load(REVIEW_URL)
+                .as(ReviewResponse.class)
+                .setCallback(new FutureCallback<ReviewResponse>() {
+                    @Override
+                    public void onCompleted(Exception e, ReviewResponse reviewResult) {
+                        //TODO Condition
+                        setReviewResult(reviewResult);
+                    }
+                });
+    }
+
+    public void setReviewResult(ReviewResponse reviewResult) {
+        recyclerViewReviews.setAdapter(new ReviewAdapter(this, reviewResult.getReviews()));
     }
 
     @Override
@@ -79,25 +131,57 @@ public class DetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setDetails(Movie movieDetail) {
+    private void setDetails(Movie movie) {
 
-        String imageUrl = Constants.IMAGE_BASE_URL + movieDetail.getPosterPath();
+        String imageUrl = Constants.IMAGE_BASE_URL + movie.getPosterPath();
         Picasso.with(this)
                 .load(imageUrl)
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.error)
                 .into(detailPoster);
 
-        float voteAverage = movieDetail.getVoteAverage() / 2;
+        float voteAverage = movie.getVoteAverage() / 2;
         String stringVoteAverage = voteAverage + "  ";
-        String stringVoteCount = "/ " + movieDetail.getVoteCount() + " votes";
+        String stringVoteCount = "/ " + movie.getVoteCount() + " votes";
 
-        detailTitle.setText(movieDetail.getOriginalTitle());
-        detailDate.setText(movieDetail.getReleaseDate());
-        detailSynopsis.setText(movieDetail.getOverview());
+        detailTitle.setText(movie.getOriginalTitle());
+        detailDate.setText(movie.getReleaseDate());
+        detailSynopsis.setText(movie.getOverview());
         detailRatingBarVotes.setRating(voteAverage);
         detailVotes.setText(stringVoteAverage);
         detailVoteCount.setText(stringVoteCount);
+    }
 
+    public void loadTrailer(View view) {
+
+        String movieId = String.valueOf(movie.getId());
+        String VIDEO_URL = Constants.QUERY_BASE_URL + movieId + Constants.VIDEOS_STRING +
+                Constants.API_KEY_WITH_SUFIX_BASE_URL;
+
+        Ion.with(this)
+                .load(VIDEO_URL)
+                .as(TrailerResponse.class)
+                .setCallback(new FutureCallback<TrailerResponse>() {
+                    @Override
+                    public void onCompleted(Exception e, TrailerResponse r) {
+                        if (e == null) {
+                            List<Trailer> result = r.getResults();
+                            int trailerSelected = 0;
+                            if (trailerSelected < result.size()) {
+                                String key = result.get(trailerSelected).getKey();
+                                String trailerUrl = Constants.YOUTUBE_BASE_URL + key;
+
+                                Uri url = Uri.parse(trailerUrl);
+                                Intent youtubeIntent = new Intent(Intent.ACTION_VIEW, url);
+                                startActivity(youtubeIntent);
+                            } else {
+                                Toast.makeText(DetailActivity.this, R.string.trailer_not_available, Toast.LENGTH_SHORT).show();
+
+                            }
+                        } else {
+                            Toast.makeText(DetailActivity.this, R.string.try_again_later, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }
