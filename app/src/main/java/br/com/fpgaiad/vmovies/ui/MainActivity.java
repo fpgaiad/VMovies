@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
     private Toast mToast = null;
     private RecyclerView recyclerView;
     private String movieToLoad;
-    private ProgressBar mLoadingIndicator;
+    private ProgressBar mMainLoadingIndicator;
     private ActionBar mActionBar;
     private boolean isPopularVideos;
 
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
         setContentView(R.layout.activity_main);
 
         mActionBar = this.getSupportActionBar();
-        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
+        mMainLoadingIndicator = findViewById(R.id.pb_main_loading_indicator);
 
         setSpanCount();
 
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
 
     private void loadMovies(String url) {
         mActionBar.setTitle(isPopularVideos ? getString(R.string.most_popular) : getString(R.string.highest_rated));
-        mLoadingIndicator.setVisibility(View.VISIBLE);
+        mMainLoadingIndicator.setVisibility(View.VISIBLE);
 
         Ion.with(this)
                 .load(url)
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
                 .setCallback(new FutureCallback<MovieResponse>() {
                     @Override
                     public void onCompleted(Exception e, MovieResponse result) {
-                        mLoadingIndicator.setVisibility(View.INVISIBLE);
+                        mMainLoadingIndicator.setVisibility(View.INVISIBLE);
                         if (e == null) {
                             setResponse(result);
                         } else {
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
         isPopularVideos = itemThatWasClickedId == R.id.action_popular;
         movieToLoad = isPopularVideos ? Constants.MOST_POPULAR_URL : Constants.HIGHEST_RATED_URL;
         loadMovies(movieToLoad);
-        showMessage(isPopularVideos ? getString(R.string.most_popular) : getString(R.string.highest_rated));
+        //showMessage(isPopularVideos ? getString(R.string.most_popular) : getString(R.string.highest_rated));
         return true;
 
         //Alternative Code:

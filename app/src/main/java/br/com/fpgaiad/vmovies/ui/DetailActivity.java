@@ -8,10 +8,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,8 +50,16 @@ public class DetailActivity extends AppCompatActivity {
     TextView detailSynopsis;
     @BindView(R.id.recycler_view_reviews)
     RecyclerView recyclerViewReviews;
+    @BindView(R.id.iv_favorite_empty)
+    ImageView emptyFavorite;
+    @BindView(R.id.iv_favorite_selected)
+    ImageView selectedFavorite;
+    @BindView(R.id.pb_review_loading_indicator)
+    ProgressBar mReviewLoadingIndicator;
 
     private Movie movie;
+    private Toast mFavToast;
+    private boolean isFavorite = false;
     //private String movieId;
 
 //Code used without 'Butter Knife':
@@ -100,9 +108,9 @@ public class DetailActivity extends AppCompatActivity {
 
     public void setReviews(Movie movie) {
 
+        mReviewLoadingIndicator.setVisibility(View.VISIBLE);
 
         String movieId = String.valueOf(movie.getId());
-
         String REVIEW_URL = Constants.QUERY_BASE_URL + movieId + Constants.REVIEWS_STRING +
                 Constants.API_KEY_WITH_SUFIX_BASE_URL;
 
@@ -112,8 +120,13 @@ public class DetailActivity extends AppCompatActivity {
                 .setCallback(new FutureCallback<ReviewResponse>() {
                     @Override
                     public void onCompleted(Exception e, ReviewResponse reviewResult) {
-                        //TODO Condition
-                        setReviewResult(reviewResult);
+                        mReviewLoadingIndicator.setVisibility(View.INVISIBLE);
+                        if (e == null) {
+                            setReviewResult(reviewResult);
+                        } else {
+                            Toast.makeText(DetailActivity.this,
+                                    "No response", Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
     }
@@ -145,7 +158,7 @@ public class DetailActivity extends AppCompatActivity {
         String stringVoteCount = "/ " + movie.getVoteCount() + " votes";
 
         detailTitle.setText(movie.getOriginalTitle());
-        detailDate.setText(movie.getReleaseDate());
+        detailDate.setText(movie.getReleaseDate().substring(0, 4));
         detailSynopsis.setText(movie.getOverview());
         detailRatingBarVotes.setRating(voteAverage);
         detailVotes.setText(stringVoteAverage);
@@ -175,13 +188,44 @@ public class DetailActivity extends AppCompatActivity {
                                 Intent youtubeIntent = new Intent(Intent.ACTION_VIEW, url);
                                 startActivity(youtubeIntent);
                             } else {
-                                Toast.makeText(DetailActivity.this, R.string.trailer_not_available, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(DetailActivity.this,
+                                        R.string.trailer_not_available, Toast.LENGTH_SHORT).show();
 
                             }
                         } else {
-                            Toast.makeText(DetailActivity.this, R.string.try_again_later, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DetailActivity.this,
+                                    R.string.try_again_later, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    public void toggleFavorite(View view) {
+
+        if (mFavToast != null) {
+            mFavToast.cancel();
+        }
+
+        if (!isFavorite) {
+            view.setVisibility(View.GONE);
+            selectedFavorite.setVisibility(View.VISIBLE);
+
+            mFavToast = Toast.makeText(this,
+                    "Added to Favorites", Toast.LENGTH_SHORT);
+            mFavToast.show();
+
+            isFavorite = true;
+
+        } else {
+            view.setVisibility(View.GONE);
+            emptyFavorite.setVisibility(View.VISIBLE);
+
+            mFavToast = Toast.makeText(this,
+                    "Removed from Favorites", Toast.LENGTH_SHORT);
+            mFavToast.show();
+
+            isFavorite = false;
+        }
+
     }
 }
