@@ -60,7 +60,8 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Click
     }
 
     private void loadMovies(String url) {
-        mActionBar.setTitle(isPopularVideos ? getString(R.string.most_popular) : getString(R.string.highest_rated));
+        mActionBar.setTitle(isPopularVideos ?
+                getString(R.string.most_popular) : getString(R.string.highest_rated));
         mMainLoadingIndicator.setVisibility(View.VISIBLE);
 
         Ion.with(this)
