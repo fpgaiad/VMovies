@@ -1,5 +1,6 @@
 package br.com.fpgaiad.vmovies.ui;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,8 +29,11 @@ import br.com.fpgaiad.vmovies.entities.Movie;
 import br.com.fpgaiad.vmovies.entities.ReviewResponse;
 import br.com.fpgaiad.vmovies.entities.Trailer;
 import br.com.fpgaiad.vmovies.entities.TrailerResponse;
+import br.com.fpgaiad.vmovies.repository.FavoriteContract;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static br.com.fpgaiad.vmovies.repository.FavoriteContract.FavoriteEntry.CONTENT_URI;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -209,6 +213,12 @@ public class DetailActivity extends AppCompatActivity {
         if (!isFavorite) {
             view.setVisibility(View.GONE);
             selectedFavorite.setVisibility(View.VISIBLE);
+
+// TODO:Error!
+//            ContentValues contentValues = new ContentValues();
+//            contentValues.put(FavoriteContract.FavoriteEntry.MOVIE_ID, String.valueOf(movie.getId()));
+//
+//            getContentResolver().insert(CONTENT_URI, contentValues);
 
             mFavToast = Toast.makeText(this,
                     "Added to Favorites", Toast.LENGTH_SHORT);

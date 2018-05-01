@@ -29,6 +29,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.MainActivity"/>
         </activity>
+
+        <provider
+            android:authorities="br.com.fpgaiad.vmovies"
+            android:name="br.com.fpgaiad.vmovies.repository.FavoriteContentProvider"
+            android:exported="false" />
+
     </application>
 
 </manifest>
